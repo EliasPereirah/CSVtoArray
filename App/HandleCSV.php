@@ -8,7 +8,7 @@ class HandleCSV
     {
         $this->Slugify = new Slugify();
     }
-    public function toArray(string $file_path, $has_headers = false):array
+    public function toArray(string $file_path, $has_headers = false, $ignore_columns = []):array
     {
         $data = [];
         $handle = fopen($file_path, 'r');
@@ -23,6 +23,10 @@ class HandleCSV
             $line_data = [];
             if($has_headers){
                 foreach ($headers as $key => $h_name) {
+                    if(in_array($key, $ignore_columns)){
+                        // column will be ignored
+                        continue;
+                    }
                     $h_name = $this->Slugify->slugify($h_name);
                     $item = $linha[$key] ?? '';
                     $line_data[$h_name] = $item;
@@ -30,6 +34,10 @@ class HandleCSV
             }else{
                 $idx = 0;
                 while (isset($linha[$idx])) {
+                    if(in_array($idx, $ignore_columns)){
+                        // column will be ignored
+                        continue;
+                    }
                     $line_data[] = $linha[$idx];
                     $idx++;
                 }
