@@ -25,9 +25,13 @@ valor do array seja associado à sua respectiva coluna do cabeçalho.
 require_once __DIR__ . "/vendor/autoload.php";
 $HandleCSV = new \App\HandleCSV();
 $csv_path = __DIR__ . '/data.csv';
-$arr = $HandleCSV->toArray($csv_path, true); 
+$ignoreColumns = []; // ex: [1, 5, 6]; if you want to ignore columns at position 1, 5 and 6
+$arr = $HandleCSV->csvToArray($csv_path, true, $ignoreColumns);
 echo "<pre>";
 print_r($arr);
+
+// $csv = $HandleCSV->arrayToCSV($arr); // You can also convert un array to CSV
+// echo $csv;
 ?>
 ```
 Expected output
