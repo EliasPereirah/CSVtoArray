@@ -8,7 +8,7 @@ class HandleCSV
     {
         $this->Slugify = new Slugify();
     }
-    public function toArray(string $file_path, $has_headers = false, $ignore_columns = []):array
+    public function csvToArray(string $file_path, $has_headers = false, $ignore_columns = []):array
     {
         $data = [];
         $handle = fopen($file_path, 'r');
@@ -36,6 +36,7 @@ class HandleCSV
                 while (isset($linha[$idx])) {
                     if(in_array($idx, $ignore_columns)){
                         // column will be ignored
+                        $idx++;
                         continue;
                     }
                     $line_data[] = $linha[$idx];
@@ -46,6 +47,23 @@ class HandleCSV
         }
         fclose($handle);
         return $data;
+    }
+
+    public function arrayToCSV(array $arr):string{
+        $csv_string = '';
+        foreach ($arr as $lines){
+            $the_line ='';
+            foreach ($lines as $line){
+                if(str_contains($line, ',')){
+                    $line = "\"$line\"";
+                }
+                $the_line .= "$line,";
+            }
+            $the_line = rtrim($the_line, ",");
+            $csv_string .= $the_line."\r";
+        }
+        $csv_string = trim($csv_string);
+        return $csv_string;
     }
 
 
